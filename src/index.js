@@ -1,27 +1,20 @@
 const MyKoa = require('./lib/application')
+const useMiddlewares = require('./middleware')
 
 let app = new MyKoa()
 
-const sleep = time =>
-  new Promise((res, rej) => {
-    setTimeout(() => {
-      res()
-    }, time)
-  })
+useMiddlewares(app)
 
 app.use(async (ctx, next) => {
-  await next()
+  ctx.body = { a: 1, b: 2, cookie: ctx.cookie('test') }
 })
-
-app.use(async (ctx, next) => {
-  await sleep(1000)
-  await next()
-})
-
-app.use(async (ctx, next) => {
-  ctx.body = { a: 1, b: 2 }
-})
-
+// app.use(async (ctx, next) => {
+//   try {
+//     await next()
+//   } catch (err) {
+//
+//   }
+// })
 app.on('error', (err, ctx) => {
   console.log('error happends: ', err.stack)
 })
