@@ -1,0 +1,20 @@
+{
+  "name": "falcon",
+  "version": "1.0.0",
+  "description": "try to handwritten koa",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "keywords": [
+    "koa"
+  ],
+  "author": "xg_jser@163.com",
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  },
+  "dependencies": {
+    "cache-content-type": "^1.0.1"
+  }
+}
