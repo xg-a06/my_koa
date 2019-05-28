@@ -5,22 +5,7 @@ const compose = require('./compose')
 const context = require('./context')
 const request = require('./request')
 const response = require('./response')
-
-function isJSON(str) {
-  if (typeof str == 'string') {
-    try {
-      var obj = JSON.parse(str)
-      if (typeof obj == 'object' && obj) {
-        return true
-      } else {
-        return false
-      }
-    } catch (e) {
-      return false
-    }
-  }
-  console.log('It is not a string!')
-}
+const { isJSON } = require('./helper')
 class MyKoa extends EventEmitter {
   constructor() {
     super()

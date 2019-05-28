@@ -1,4 +1,5 @@
 const getType = require('cache-content-type')
+const { isJSON } = require('./helper')
 
 const request = {
   get headerSent() {
