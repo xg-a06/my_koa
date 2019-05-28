@@ -101,6 +101,7 @@ const request = {
     }
     if (!this.hasSetStatus) {
       this.status = 200
+      this.message = 'OK'
     }
     const notSetType = !this.header['content-type']
 

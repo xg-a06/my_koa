@@ -11,6 +11,7 @@ const ctx = {
       ctx.status = 404
     } else {
       ctx.status = 500
+      ctx.message = 'Internal error'
     }
     let msg = err.message || 'Internal error'
     ctx.res.end(msg)

@@ -89,9 +89,6 @@ class Router {
       return compose(fns)(ctx, next)
     }
   }
-  use(path, middlewares) {
-    return this
-  }
 }
 
 module.exports = Router
