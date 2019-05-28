@@ -43,6 +43,7 @@ class MyKoa extends EventEmitter {
   }
   handleRequest(ctx, fn) {
     ctx.res.statusCode = 404
+    ctx.res.statusMessage = 'Not Found'
     const onerror = err => ctx.onerror(err, ctx)
     const handleResponse = () => this.responseBody(ctx)
     return fn(ctx)
