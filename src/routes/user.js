@@ -4,12 +4,15 @@ const router = new Router()
 
 router.prefix('/users')
 
+router.get('/', function(ctx, next) {
+  ctx.body = 'this is a users response'
+})
 router.get('/:id', function(ctx, next) {
   ctx.body = 'this is a users response' + JSON.stringify(ctx.params)
-  next()
 })
-router.get('/bar', function(ctx, next) {
-  ctx.body = 'this is a users/bar response'
+router.get('/login', function(ctx, next) {
+  ctx.cookie('userid=123; path=/; httpOnly;')
+  ctx.body = 'this is login response'
 })
 
 module.exports = router

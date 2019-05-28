@@ -1,6 +1,10 @@
+const createError = require('http-errors')
 const Delegate = require('./delegate')
 
 const ctx = {
+  throw(...args) {
+    throw createError(...args)
+  },
   onerror(err, ctx) {
     this.app.emit('error', err, this)
     if (err.code === 'ENOENT') {

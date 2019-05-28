@@ -7,7 +7,7 @@ let app = new MyKoa()
 
 useMiddlewares(app)
 
-// app.use(indexRouter.routes())
+app.use(indexRouter.routes())
 app.use(userRouter.routes())
 // app.use(async (ctx, next) => {
 //   try {

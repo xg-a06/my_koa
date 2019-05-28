@@ -8,8 +8,9 @@ class Router {
     this.methods = ['HEAD', 'OPTIONS', 'GET', 'PUT', 'POST', 'DELETE']
     this[initProto]()
   }
+
   register(method, path, fn) {
-    let _path = this.opts.prefix ? this.opts.prefix + path : path
+    let _path = this.opts.prefix ? this.setPrefix(path) : path
     let route = {
       method,
       path: _path,
@@ -28,24 +29,27 @@ class Router {
   }
   [initProto]() {
     this.methods.forEach(method => {
-      Router.prototype[method.toLowerCase()] = function(path, callback) {
+      Router.prototype[method.toLowerCase()] = function(path, ...callback) {
         this.register(method, path, callback)
         return this
       }
     })
   }
+  setPrefix(path) {
+    return this.opts.prefix + (path === '/' ? '' : path)
+  }
   prefix(prefix) {
     prefix = prefix.replace(/\/$/, '') //去掉结尾/
     this.opts.prefix = prefix
     //如果后添加前缀,那么遍历已注册的路由添加前缀
-    this.stack.forEach(function(route) {
-      route.path = prefix + route.path
+    this.stack.forEach(route => {
+      route.path = this.setPrefix(route.path)
     })
 
     return this
   }
   pathReg(route) {
-    return route.reg || new RegExp(`${route.path}\/?$`)
+    return route.reg || new RegExp(`^${route.path}\/?$`)
   }
   match(path, method) {
     let hasAb = false //是否有绝对匹配
@@ -74,8 +78,19 @@ class Router {
         })
         ctx.params = params
       }
-      return compose(matches.map(temp => temp.fn))(ctx, next)
+      let fns = []
+      if (matches.length > 0) {
+        fns = matches
+          .map(temp => temp.fn)
+          .reduce((a, b) => {
+            return a.concat(b)
+          })
+      }
+      return compose(fns)(ctx, next)
     }
+  }
+  use(path, middlewares) {
+    return this
   }
 }
 
