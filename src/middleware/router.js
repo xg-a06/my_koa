@@ -3,15 +3,26 @@ const initProto = Symbol('initProto')
 
 class Router {
   constructor() {
+    this.opts = {}
     this.stack = []
     this.methods = ['HEAD', 'OPTIONS', 'GET', 'PUT', 'POST', 'DELETE']
     this[initProto]()
   }
   register(method, path, fn) {
+    let _path = this.opts.prefix ? this.opts.prefix + path : path
     let route = {
       method,
-      path,
+      path: _path,
       fn
+    }
+    if (path.includes(':')) {
+      let params = []
+      let reg = _path.replace(/:([^/]*)/g, function() {
+        params.push(arguments[1])
+        return '([^/]*)'
+      })
+      route.reg = new RegExp(reg + '/?$')
+      route.params = params
     }
     this.stack.push(route)
   }
@@ -23,16 +34,47 @@ class Router {
       }
     })
   }
+  prefix(prefix) {
+    prefix = prefix.replace(/\/$/, '') //去掉结尾/
+    this.opts.prefix = prefix
+    //如果后添加前缀,那么遍历已注册的路由添加前缀
+    this.stack.forEach(function(route) {
+      route.path = prefix + route.path
+    })
+
+    return this
+  }
+  pathReg(route) {
+    return route.reg || new RegExp(`${route.path}\/?$`)
+  }
   match(path, method) {
-    return this.stack
-      .filter(route => {
-        return route.path === path && route.method === method
-      })
-      .map(temp => temp.fn)
+    let hasAb = false //是否有绝对匹配
+    let matches = this.stack.filter(route => {
+      if (this.pathReg(route).test(path) && route.method === method) {
+        if (!route.reg) {
+          hasAb = true
+        }
+        return true
+      }
+    })
+    if (hasAb) {
+      matches = matches.filter(route => !route.reg)
+    }
+
+    return matches
   }
   routes() {
     return (ctx, next) => {
-      return compose(this.match(ctx.path, ctx.method))(ctx, next)
+      let matches = this.match(ctx.path, ctx.method)
+      if (matches.length > 0 && matches[0].reg) {
+        let regRet = ctx.path.match(matches[0].reg)
+        let params = {}
+        matches[0].params.forEach((item, index) => {
+          params[item] = regRet[index + 1]
+        })
+        ctx.params = params
+      }
+      return compose(matches.map(temp => temp.fn))(ctx, next)
     }
   }
 }

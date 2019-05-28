@@ -1,5 +1,5 @@
 function compose(middlewares) {
-  return ctx => {
+  return (ctx, next) => {
     let index = -1
     const dispatch = i => {
       if (i <= index) {
@@ -8,6 +8,9 @@ function compose(middlewares) {
       }
       index = i
       let fn = middlewares[i]
+      if (i === middlewares.length) {
+        fn = next //修复类似路由中间件问题
+      }
       if (!fn) {
         return Promise.resolve()
       }
