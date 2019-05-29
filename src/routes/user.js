@@ -14,7 +14,7 @@ router.get('/:id', function(ctx, next) {
 })
 router.post('/login', function(ctx, next) {
   ctx.cookie('userid=123; path=/; httpOnly;')
-  ctx.body = `this is login response${ctx.req.body.xx}${ctx.req.body.yy}`
+  ctx.body = `this is login response${JSON.stringify(ctx.req.body)}`
   if (ctx.req.body.hasOwnProperty('file1')) {
     fs.writeFileSync(
       path.resolve(__dirname, `../../upload/xxx.png`),
