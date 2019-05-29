@@ -1,4 +1,4 @@
-const middlewares = ['log', 'cookie', 'bodyparser']
+const middlewares = ['log', 'static', 'view', 'cookie', 'bodyparser']
 
 module.exports = app => {
   middlewares.forEach(item => {

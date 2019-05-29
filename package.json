@@ -17,7 +17,11 @@
   },
   "dependencies": {
     "cache-content-type": "^1.0.1",
+    "consolidate": "^0.15.1",
+    "ejs": "^2.6.1",
     "http-errors": "^1.7.2",
+    "mime": "^2.4.3",
+    "pug": "^2.0.3",
     "qs": "^6.7.0"
   }
 }

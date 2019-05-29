@@ -1,14 +1,14 @@
 const MyKoa = require('./lib/application')
 const useMiddlewares = require('./middleware')
 const indexRouter = require('./routes/index')
-const userRouter = require('./routes/user')
+// const userRouter = require('./routes/user')
 
 let app = new MyKoa()
 
 useMiddlewares(app)
 
 app.use(indexRouter.routes())
-app.use(userRouter.routes())
+// app.use(userRouter.routes())
 // app.use(async (ctx, next) => {
 //   try {
 //     await next()

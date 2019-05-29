@@ -3,7 +3,9 @@ const Router = require('../middleware/router')
 const router = new Router()
 
 router.get('/', async (ctx, next) => {
-  ctx.body = 'hello koa2'
+  await ctx.render('index', {
+    title: 'Koa2!'
+  })
 })
 
 router.get(
